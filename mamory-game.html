@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<link rel="icon" href="https://cdn.bleacherreport.net/images/team_logos/64x64/houston_rockets.png">
+	<title>Houston Rockets memory game</title>
+	<h1 >Welcome to the Houston Rockets Memory Game</h1>
+
+<style type="text/css">
+
+body {
+	background: url("toyotacenter.jpg") no-repeat;
+	background-size: cover;
+}
+h1 {
+	color: orange;
+	text-align: center;
+}
+
+
+
+div#memory_board {
+	background: url(http://content.sportslogos.net/logos/6/230/full/188_houston-rockets-stadium-2012.gif);
+	border: #999 10px solid;
+	height: 210px;
+	width: 725px;
+	padding: 24px;
+	margin: 0px auto;
+}	
+
+div#memory_board > div  {
+	background: url(rockets1.png) no-repeat;
+	background-color: black;
+	border: #000 1px solid;
+	width: 60px;
+	height: 60px;
+	float: left;
+	margin: 10px;
+	padding: 9px;
+	font-size: 64px;
+	cursor: pointer;
+	text-align: center;
+	color: red;
+
+
+}
+
+</style>
+
+<script type="text/javascript">
+
+	var memory_array = ['R', 'R', 'O', 'O', 'C', 'C', 'K', 'K', 'E', 'E', 'T', 'T', 'S', 'S'];
+	var memory_values = [];
+	var memory_tile_ids = [];
+	var tiles_flipped = 0;
+	
+	
+	Array.prototype.memory_tile_shuffle = function() {
+
+		var i = this.length, j, temp;
+
+		while (--i > 0){ 
+			j = Math.floor(Math.random() * (i+1));
+			temp = this[j];
+			this[j] = this[i];
+			this[i] = temp;
+		}
+	}
+
+	function newBoard () {
+		tiles_flipped = 0;
+		var output = '';
+
+		memory_array.memory_tile_shuffle();
+
+		for (var i = 0; i<memory_array.length; i++){
+			output += '<div id="title_'+i+'" onclick="memoryFlipTile(this, \''+memory_array[i]+'\')"></div>';
+		}
+		document.getElementById('memory_board').innerHTML = output;
+
+	}
+
+	function memoryFlipTile (tile, val){
+
+		if (tile.innerHTML == "" && memory_values.length < 2){
+			tile.style.background = '#FFF';
+			tile.innerHTML = val;
+
+		if (memory_values.length == 0){
+			memory_values.push(val);
+			memory_tile_ids.push(tile.id);
+		}	
+
+		else if (memory_values.length == 1){
+			memory_values.push(val);
+			memory_tile_ids.push(tile.id);
+			if (memory_values[0] == memory_values[1]){
+				tiles_flipped += 2;
+				//clear both arrays
+				memory_values = [];
+				memory_tile_ids = [];
+				// Check to se if the whole board is cleared
+				if (tiles_flipped == memory_array.length){
+					alert("Board cleared... generating new board");
+					document.getElementById('memory_board').innerHTML = "";
+					newBoard();
+				}
+			}
+
+
+				else {
+					function flip2Back (){
+						// Flip the 2 tiles back over
+						var tile_1 = document.getElementById(memory_tile_ids[0]);
+						var tile_2 = document.getElementById(memory_tile_ids[1]);
+						tile_1.style.background = 'url(rockets1.png)';
+						tile_1.style.backgroundColor = "black";
+						tile_1.innerHTML = "";
+						tile_2.style.background = 'url(rockets1.png)';
+						tile_2.style.backgroundColor = "black";
+						tile_2.innerHTML = "";
+						// Clear both arrays
+						memory_values = [];
+						memory_tile_ids = [];
+					}
+					setTimeout(flip2Back, 700);
+		}	}	}
+	}
+
+
+</script>
+</head>
+<body>
+<div id = "memory_board"></div> </div>
+<script type="text/javascript">
+	newBoard();
+</script>
+</body>
+</html>
